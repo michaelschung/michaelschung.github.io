@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Mixing</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+    <h1>Color Mixing</h1>
+    <p>This is a simple color mixing application. Click on the buttons to see the colors mix.</p>
+
+    <div class="container">
+        <div class="column">
+            <h2>Light</h2>
+            <div class="colorBox" id="light-color">
+                <div id="circ-red" class="circle light red"></div>
+                <div id="circ-green" class="circle light green"></div>
+                <div id="circ-blue" class="circle light blue"></div>
+            </div>
+            <div class="button-group">
+                <button id="btn-red">Red</button>
+                <button id="btn-green">Green</button>
+                <button id="btn-blue">Blue</button>
+            </div>
+        </div>
+        <div class="column">
+            <h2>Pigment</h2>
+            <div class="colorBox" id="pigment-color">
+                <div id="circ-cyan" class="circle pigment cyan"></div>
+                <div id="circ-magenta" class="circle pigment magenta"></div>
+                <div id="circ-yellow" class="circle pigment yellow"></div>
+            </div>
+            <div class="button-group">
+                <button id="btn-cyan">Cyan</button>
+                <button id="btn-magenta">Magenta</button>
+                <button id="btn-yellow">Yellow</button>
+            </div>
+        </div>
+    </div>
+
+    <p id="label1" class="hidden">Note how the colors mix differently depending on whether you are mixing light or pigment.</p>
+    <p id="label2" class="hidden">Light colors mix by adding light together, while pigment colors mix by subtracting light.</p>
+    <p id="label3" class="hidden">Notice how when two light colors mix, the result is brighter. When to pigment colors mix, the result is darker.</p>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
