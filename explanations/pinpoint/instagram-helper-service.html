@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script>(function(){const H="1550b688999ca2c1054fa61124e2b2f8a5b45d01c1e7be2141c162124baf848d";if(sessionStorage.getItem("explanations_auth")!==H){window.location.href="/explanations/";}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InstagramHelperService — Code Explanation</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f6f8fa;
+    --bg-code: #f0f2f5;
+    --text: #1a1a2e;
+    --text-secondary: #555;
+    --border: #d0d7de;
+    --accent: #0969da;
+    --accent-light: #ddf4ff;
+    --badge-bg: #e8e8e8;
+    --sidebar-bg: #f6f8fa;
+    --sidebar-active: #0969da;
+    --sidebar-hover: #e8e8e8;
+    --shadow: rgba(0,0,0,0.08);
+    --gotcha-bg: #fff8c5;
+    --gotcha-border: #d4a72c;
+    --side-effect-bg: #dafbe1;
+    --side-effect-border: #2da44e;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-code: #1c2128;
+      --text: #e6edf3;
+      --text-secondary: #8b949e;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent-light: #1a3a5c;
+      --badge-bg: #30363d;
+      --sidebar-bg: #161b22;
+      --sidebar-active: #58a6ff;
+      --sidebar-hover: #21262d;
+      --shadow: rgba(0,0,0,0.3);
+      --gotcha-bg: #2d2a1e;
+      --gotcha-border: #966600;
+      --side-effect-bg: #122117;
+      --side-effect-border: #238636;
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* Sidebar Navigation */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    z-index: 100;
+  }
+
+  nav h2 {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    padding: 0 20px;
+    margin-bottom: 12px;
+  }
+
+  nav a {
+    display: block;
+    padding: 6px 20px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 13px;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+  }
+
+  nav a:hover {
+    background: var(--sidebar-hover);
+    border-left-color: var(--border);
+  }
+
+  nav a.section-link {
+    font-weight: 600;
+    padding-top: 10px;
+    margin-top: 4px;
+  }
+
+  nav a.sub-link {
+    padding-left: 32px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  /* Main Content */
+  main {
+    margin-left: 280px;
+    max-width: 900px;
+    padding: 40px 48px 80px;
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+  }
+
+  .file-path {
+    font-family: 'SF Mono', 'Fira Code', 'Fira Mono', monospace;
+    font-size: 13px;
+    background: var(--bg-code);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--text-secondary);
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 48px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 28px;
+    margin-bottom: 10px;
+  }
+
+  p { margin-bottom: 12px; }
+
+  .line-ref {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    background: var(--badge-bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  pre {
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    margin: 12px 0 16px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    background: var(--bg-code);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  pre code {
+    background: none;
+    padding: 0;
+  }
+
+  details {
+    margin: 12px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  summary {
+    padding: 12px 16px;
+    background: var(--bg-secondary);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    user-select: none;
+    list-style: none;
+  }
+
+  summary::before {
+    content: '▸ ';
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  details[open] summary::before {
+    content: '▾ ';
+  }
+
+  details > .detail-content {
+    padding: 16px;
+  }
+
+  .callout {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    border-left: 4px solid;
+  }
+
+  .callout-gotcha {
+    background: var(--gotcha-bg);
+    border-color: var(--gotcha-border);
+  }
+
+  .callout-side-effect {
+    background: var(--side-effect-bg);
+    border-color: var(--side-effect-border);
+  }
+
+  .callout-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .callout p { font-size: 14px; margin-bottom: 6px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  ul, ol {
+    margin: 8px 0 12px 24px;
+  }
+
+  li { margin-bottom: 4px; }
+
+  .dep-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .dep-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+
+  .dep-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .dep-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .method-sig {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    color: var(--accent);
+  }
+
+  .mermaid {
+    margin: 16px 0;
+    text-align: center;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 16px;
+    font-size: 14px;
+  }
+
+  th, td {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+
+  th {
+    background: var(--bg-secondary);
+    font-weight: 600;
+  }
+
+  @media (max-width: 900px) {
+    nav { display: none; }
+    main { margin-left: 0; padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <h2>Contents</h2>
+  <a href="#summary" class="section-link">Summary</a>
+  <a href="#key-concepts" class="section-link">Key Concepts</a>
+  <a href="#architecture" class="section-link">Architecture</a>
+  <a href="#dependencies" class="sub-link">Dependencies</a>
+  <a href="#data-flow" class="sub-link">Data Flow</a>
+  <a href="#webhook-entry" class="section-link">Webhook Entry Point</a>
+  <a href="#comment-handling" class="section-link">Comment Handling</a>
+  <a href="#dm-handling" class="section-link">DM Handling</a>
+  <a href="#postback-handling" class="section-link">Postback / Button Handling</a>
+  <a href="#campaigns" class="section-link">Campaign Triggering</a>
+  <a href="#drip-processing" class="section-link">Drip Processing</a>
+  <a href="#message-sending" class="section-link">Message Formatting & Sending</a>
+  <a href="#contact-collection" class="section-link">Contact Info Collection</a>
+  <a href="#giveaways" class="section-link">Giveaways</a>
+  <a href="#segmentation" class="section-link">Audience Segmentation</a>
+  <a href="#credits" class="section-link">Credits System</a>
+  <a href="#fan-management" class="section-link">Fan Management</a>
+  <a href="#moderation" class="section-link">AI Moderation</a>
+  <a href="#story-mentions" class="section-link">Story Mentions</a>
+  <a href="#compliance" class="section-link">Compliance Webhooks</a>
+  <a href="#gotchas" class="section-link">Gotchas & Notes</a>
+  <a href="#db-models" class="section-link">Related DB Models</a>
+</nav>
+
+<main>
+
+<!-- ============ SUMMARY ============ -->
+<h1>InstagramHelperService</h1>
+<p class="subtitle">
+  <span class="file-path">libs/instagram-helper/src/lib/instagram-helper.service.ts</span>
+  &mdash; ~4,070 lines, ~50 methods
+</p>
+
+<section id="summary">
+<h2>Summary</h2>
+<p>
+  <code>InstagramHelperService</code> is the central engine for all of Pinpoint's Instagram DM automation.
+  It receives raw webhook events from Instagram (comments, DMs, postbacks, story mentions), matches them against
+  creator-configured campaigns, and orchestrates the sending of automated drip sequences, giveaways, blasts,
+  and contact-info collection flows. It also handles audience segmentation, credit metering, AI-powered comment/DM
+  moderation, and Instagram compliance webhooks (deauthorize/delete).
+</p>
+<p>
+  This is a <strong>shared NestJS library</strong> (<code>@pinpoint-monorepo/instagram-helper</code>) consumed by the
+  backend API and worker apps. It's the largest single service in the monorepo, acting as the business logic layer
+  between Instagram's Graph API and Pinpoint's database.
+</p>
+</section>
+
+<!-- ============ KEY CONCEPTS ============ -->
+<section id="key-concepts">
+<h2>Key Concepts</h2>
+<table>
+  <tr><th>Term</th><th>Meaning</th></tr>
+  <tr><td><strong>Drip Campaign</strong> (<code>IgDripCampaign</code>)</td><td>An automated sequence of DMs triggered by a keyword, comment, icebreaker, or ad click. Contains ordered "drips" (steps).</td></tr>
+  <tr><td><strong>Drip</strong> (<code>IgDrip</code>)</td><td>A single step in a campaign — can be text, image, post share, button, combo, carousel, contact form, or giveaway.</td></tr>
+  <tr><td><strong>Blast</strong> (<code>InstagramBlast</code>)</td><td>A one-time bulk DM sent to a fan audience (like an email blast, but via IG DMs).</td></tr>
+  <tr><td><strong>Fan / InstagramUser</strong></td><td>A person who has interacted with a creator's IG account. Tracked in DB with profile info, contact details, blast eligibility window.</td></tr>
+  <tr><td><strong>TeamInstagramAccount</strong></td><td>A creator's connected Instagram business account. Links to the team, stores IG ID, and references access token in AWS Secrets Manager.</td></tr>
+  <tr><td><strong>Segment</strong> (<code>IgUserSegment</code>)</td><td>A saved audience filter — can filter by follower status, contact info collected, automations triggered, giveaways won. Supports AND/OR logic.</td></tr>
+  <tr><td><strong>Blast Window</strong></td><td>Instagram's 24-hour messaging window. A fan is "blast eligible" only if <code>blastWindowEnds &gt; now()</code>. The window resets each time a fan DMs the business.</td></tr>
+  <tr><td><strong>Credits</strong></td><td>Teams on BASE or GROWTH plans have a finite number of IG message credits. Each drip step in a campaign costs 1 credit.</td></tr>
+  <tr><td><strong>Postback</strong></td><td>Instagram's callback when a user taps a button in a structured message. Contains a JSON payload identifying the button.</td></tr>
+  <tr><td><strong>Icebreaker</strong></td><td>Pre-set conversation starters shown on a business IG profile. Each maps to a campaign.</td></tr>
+  <tr><td><strong>Passthrough IDs</strong></td><td>Specific IG account IDs (Pinpoint internal + test accounts) whose webhook events get forwarded to dev/hookdeck for debugging.</td></tr>
+</table>
+</section>
+
+<!-- ============ ARCHITECTURE ============ -->
+<section id="architecture">
+<h2>Architecture</h2>
+
+<h3 id="dependencies">Dependencies (12 injected services)</h3>
+<div class="dep-grid">
+  <div class="dep-card">
+    <h4>PrismaService</h4>
+    <p>Database access — the primary dependency. Nearly every method queries or writes to Postgres via Prisma.</p>
+  </div>
+  <div class="dep-card">
+    <h4>SqsService</h4>
+    <p>AWS SQS queues — used for blast sending and the <code>InstagramSubscribe</code> queue (hub subscription after contact collection).</p>
+  </div>
+  <div class="dep-card">
+    <h4>WorkerService</h4>
+    <p>Graphile Worker — schedules async tasks like <code>processIgDrip</code> with delays for drip sequences.</p>
+  </div>
+  <div class="dep-card">
+    <h4>AwsSecretsManagerService</h4>
+    <p>Stores and retrieves Instagram access tokens securely. Each team's token is a named secret.</p>
+  </div>
+  <div class="dep-card">
+    <h4>AIService</h4>
+    <p>AI-powered moderation — classifies comments and DMs, generates auto-responses.</p>
+  </div>
+  <div class="dep-card">
+    <h4>MetaHelperService</h4>
+    <p>Shared Meta/Facebook utilities — likely used for common Graph API patterns.</p>
+  </div>
+  <div class="dep-card">
+    <h4>S3Service</h4>
+    <p>Stores story mention images, profile pictures, and drip campaign images in dedicated S3 buckets.</p>
+  </div>
+  <div class="dep-card">
+    <h4>EncryptionService</h4>
+    <p>Encrypts sensitive data like phone numbers before storage.</p>
+  </div>
+  <div class="dep-card">
+    <h4>NotificationService</h4>
+    <p>Sends emails and SMS to creators — credit depletion warnings, button press alerts, moderation alerts.</p>
+  </div>
+  <div class="dep-card">
+    <h4>SlackBotService</h4>
+    <p>Internal Pinpoint Slack notifications — credit depletion, errors, etc.</p>
+  </div>
+  <div class="dep-card">
+    <h4>ConfigService</h4>
+    <p>Environment variables — S3 bucket names, frontend URL, NODE_ENV.</p>
+  </div>
+  <div class="dep-card">
+    <h4>ContextLoggerService</h4>
+    <p>Structured logging with service context for DataDog.</p>
+  </div>
+</div>
+
+<h3 id="data-flow">High-Level Data Flow</h3>
+<div class="mermaid">
+sequenceDiagram
+    participant IG as Instagram
+    participant WH as Webhook Controller
+    participant SVC as InstagramHelperService
+    participant DB as PostgreSQL (Prisma)
+    participant GW as Graphile Worker
+    participant API as Instagram Graph API
+    participant SQS as AWS SQS
+    participant S3 as AWS S3
+
+    IG->>WH: Webhook event (comment/DM/postback)
+    WH->>SVC: handleWebhook(payload)
+    SVC->>SVC: Dispatch to handleComment / handleMessage / handlePostback
+    SVC->>DB: Look up TeamInstagramAccount
+    SVC->>DB: Upsert InstagramUser (fan)
+    SVC->>API: Fetch fan profile info
+    SVC->>S3: Store profile picture
+    SVC->>DB: Match keyword campaigns
+    SVC->>DB: Check filters & credits
+    SVC->>GW: Schedule processIgDrip tasks (with delays)
+    GW->>SVC: processIgDrip callback
+    SVC->>DB: Load drip content
+    SVC->>SVC: formatIgMessage()
+    SVC->>API: Send DM via Graph API
+    SVC->>DB: Record IgOutboundDm
+</div>
+</section>
+
+<!-- ============ WEBHOOK ENTRY ============ -->
+<section id="webhook-entry">
+<h2>Webhook Entry Point</h2>
+<p>
+  <span class="method-sig">handleWebhook(payload)</span> <span class="line-ref">L783–819</span>
+</p>
+<p>
+  The single entry point for all Instagram webhook events. It iterates over <code>payload.entry</code> and dispatches
+  based on the shape of each entry:
+</p>
+<ul>
+  <li><code>'changes' in entry</code> → <strong>Comment</strong> → <code>handleComment()</code></li>
+  <li><code>'messaging' in entry</code> with <code>'postback'</code> → <strong>Button press</strong> → <code>handlePostback()</code></li>
+  <li><code>'messaging' in entry</code> otherwise → <strong>DM / Story mention</strong> → <code>handleMessage()</code></li>
+</ul>
+
+<div class="callout callout-side-effect">
+  <div class="callout-title">Side Effect: Webhook Passthrough</div>
+  <p>In production, events from <code>PASSTHROUGH_IDS</code> (Pinpoint's own test accounts) are forwarded to
+  <code>dev.pinpointapp.xyz</code> and Hookdeck for debugging. <span class="line-ref">L808–818</span></p>
+</div>
+
+<div class="mermaid">
+flowchart TD
+    A[handleWebhook] --> B{Entry type?}
+    B -->|has 'changes'| C[handleComment]
+    B -->|has 'messaging' + 'postback'| D[handlePostback]
+    B -->|has 'messaging'| E[handleMessage]
+    E --> F{Message type?}
+    F -->|text body| G[handleDM]
+    F -->|story_mention attachment| H[handleStoryMention]
+    F -->|other| I[Log & ignore]
+</div>
+</section>
+
+<!-- ============ COMMENT HANDLING ============ -->
+<section id="comment-handling">
+<h2>Comment Handling</h2>
+<p>
+  <span class="method-sig">handleComment(entry, event)</span> <span class="line-ref">L3020–3199</span>
+</p>
+<p>
+  Processes incoming Instagram comments on a creator's posts or reels. The flow:
+</p>
+<ol>
+  <li>Look up <code>TeamInstagramAccount</code> by the IG media owner ID</li>
+  <li>Upsert the fan's <code>InstagramUser</code> record</li>
+  <li>Check for keyword-matched drip campaigns via <code>checkKeywordCampaigns()</code> — if the comment text matches a campaign keyword, trigger it</li>
+  <li>If no keyword match, check "any comment" campaigns via <code>checkAnyCommentCampaigns()</code> — campaigns configured to trigger on any comment on a specific post</li>
+  <li>If a campaign is triggered: check filters, deduct credits, record the <code>IgTriggerComment</code>, auto-reply to the comment if configured, and trigger the drip campaign</li>
+  <li>If no campaign matched, run comment moderation (AI)</li>
+</ol>
+
+<div class="mermaid">
+flowchart TD
+    A[handleComment] --> B[Look up TeamIgAccount & upsert fan]
+    B --> C{Keyword campaign match?}
+    C -->|Yes| D[Check filters & credits]
+    C -->|No| E{Any-comment campaign?}
+    E -->|Yes| D
+    E -->|No| F[handleCommentModeration]
+    D -->|Pass| G[Record IgTriggerComment]
+    D -->|Fail| H[Skip]
+    G --> I[Auto-reply to comment if configured]
+    I --> J[triggerCampaign]
+</div>
+
+<details>
+<summary>checkKeywordCampaigns() <span class="line-ref">L1341–1423</span></summary>
+<div class="detail-content">
+<p>Finds all active drip campaigns for the team IG account that are keyword-triggered (<code>DripCampaignTrigger.KEYWORD</code>) or ad-triggered with keywords.
+Normalizes the incoming text (strips emojis, lowercases) and checks if any campaign keyword appears in the message. Returns the first match.</p>
+<p>Special handling: strips emojis using <code>emoji-regex</code>, trims whitespace. If the campaign has <code>exactMatch</code> enabled, requires exact equality rather than substring.</p>
+</div>
+</details>
+
+<details>
+<summary>checkAnyCommentCampaigns() <span class="line-ref">L1424–1511</span></summary>
+<div class="detail-content">
+<p>Finds campaigns configured with <code>DripCampaignTrigger.ANY_COMMENT</code> and checks if the comment's media ID matches one of the campaign's target media IDs
+(or the campaign's associated <code>MetaAdCollection</code> media IDs). Returns the first match.</p>
+</div>
+</details>
+</section>
+
+<!-- ============ DM HANDLING ============ -->
+<section id="dm-handling">
+<h2>DM Handling</h2>
+<p>
+  <span class="method-sig">handleMessage(entry, event)</span> <span class="line-ref">L3541–3584</span><br>
+  <span class="method-sig">handleDM(entry, event, teamIgAccount, igUser)</span> <span class="line-ref">L3440–3539</span>
+</p>
+<p>
+  <code>handleMessage</code> is the dispatcher — it deduplicates by message ID, skips deleted messages, upserts the fan,
+  then routes to <code>handleDM()</code> for text messages or <code>handleStoryMention()</code> for story mentions.
+</p>
+<p>
+  <code>handleDM</code> is the core DM processing logic:
+</p>
+<ol>
+  <li>Update the fan's <code>blastWindowEnds</code> to now + 24 hours (Instagram messaging window) and mark conversation as unread</li>
+  <li>If the team has DM-based data collection enabled, check if the message contains contact info (phone/email)</li>
+  <li>Try to match the message to a keyword campaign</li>
+  <li>If no campaign matched, mark the conversation as organic and run DM moderation</li>
+  <li>If campaign matched, check filters, deduct credits, record <code>IgTriggerDm</code>, and trigger the campaign</li>
+</ol>
+
+<div class="callout callout-side-effect">
+  <div class="callout-title">Side Effect: Blast Window Reset</div>
+  <p>Every incoming DM extends the fan's blast eligibility window to 24 hours from now. This is critical for blast functionality — fans must have DM'd within 24h to receive blasts. <span class="line-ref">L3461–3462</span></p>
+</div>
+</section>
+
+<!-- ============ POSTBACK HANDLING ============ -->
+<section id="postback-handling">
+<h2>Postback / Button Handling</h2>
+<p>
+  <span class="method-sig">handlePostback(entry, event)</span> <span class="line-ref">L3848–3955</span>
+</p>
+<p>
+  Processes button taps and icebreaker selections. Parses the postback payload JSON and dispatches:
+</p>
+<ul>
+  <li><strong><code>BUTTON</code></strong> → <code>handleButtonPress()</code> — finds the <code>IgButton</code> record, sends button response text, handles alert notifications. Special case: if the button's drip has <code>sequence === -1</code>, it's an "Accept DM" button that triggers the associated campaign. <span class="line-ref">L3693–3795</span></li>
+  <li><strong><code>OPT-IN</code></strong> → processes contact info opt-in, sends the contact form follow-up, publishes to <code>InstagramSubscribe</code> SQS queue <span class="line-ref">L3902–3935</span></li>
+  <li><strong><code>ICEBREAKER</code></strong> → <code>handleIcebreaker()</code> — triggers the associated campaign <span class="line-ref">L3797–3846</span></li>
+</ul>
+
+<div class="callout callout-gotcha">
+  <div class="callout-title">Gotcha: Legacy Icebreaker Format</div>
+  <p>Icebreaker payloads can come in two formats: the legacy <code>"ICEBREAKER|{campaignId}"</code> pipe-delimited format is converted to JSON before processing. <span class="line-ref">L3883–3886</span></p>
+</div>
+</section>
+
+<!-- ============ CAMPAIGNS ============ -->
+<section id="campaigns">
+<h2>Campaign Triggering</h2>
+
+<details>
+<summary>checkFilters() <span class="line-ref">L1512–1658</span></summary>
+<div class="detail-content">
+<p>Evaluates whether a fan passes a campaign's eligibility filters before triggering. Checks include:</p>
+<ul>
+  <li><strong>Follower-only filter</strong> — if enabled, fan must follow the business</li>
+  <li><strong>One-time trigger</strong> — checks if the fan has already triggered this campaign (via <code>IgTriggerDm</code> or <code>IgTriggerComment</code>). If <code>limitPerFan</code> is set, enforces that limit.</li>
+  <li><strong>Frequency cap</strong> — limits how often a fan can trigger across <em>all</em> campaigns within a time window</li>
+  <li><strong>Brand new fan check</strong> — if the campaign's <code>onlyBrandNew</code> flag is set, checks the IG Conversations API to verify this is the fan's first-ever interaction</li>
+</ul>
+</div>
+</details>
+
+<details>
+<summary>triggerCampaign() <span class="line-ref">L1659–1725</span></summary>
+<div class="detail-content">
+<p>The heart of campaign execution. For each active drip in the campaign (ordered by <code>sequence</code>):</p>
+<ol>
+  <li>Skip drips with <code>sequence &lt; 0</code> (these are special: -1 = "Accept DM" button, -2 = thank-you message)</li>
+  <li>Schedule a Graphile Worker task (<code>processIgDrip</code>) with a delay based on the drip's <code>delaySeconds</code></li>
+  <li>If the campaign is a postback trigger, mark the first drip as charge-exempt (the "Accept DM" step is free)</li>
+</ol>
+<p>Note: the actual message sending happens asynchronously via the worker — <code>triggerCampaign()</code> only <em>schedules</em> the tasks.</p>
+</div>
+</details>
+</section>
+
+<!-- ============ DRIP PROCESSING ============ -->
+<section id="drip-processing">
+<h2>Drip Processing</h2>
+<p>
+  <span class="method-sig">processIgDrip(payload)</span> <span class="line-ref">L2679–2757</span>
+</p>
+<p>
+  Called by the Graphile Worker task <code>ProcessIgDripTask</code>. This is where individual drip messages are actually sent:
+</p>
+<ol>
+  <li>Load the drip and its associated campaign, team IG account</li>
+  <li>Check that the campaign is still active and the drip hasn't been cancelled</li>
+  <li>Create an <code>IgOutboundDm</code> record</li>
+  <li>If it's a contact drip, route to <code>processContactDrip()</code></li>
+  <li>If it's a giveaway drip, route to <code>handleGiveawayDm()</code></li>
+  <li>Otherwise, format the message via <code>formatIgMessage()</code> and send via <code>sendIgMessage()</code></li>
+</ol>
+
+<div class="mermaid">
+flowchart TD
+    A["Graphile Worker: processIgDrip"] --> B[Load drip & campaign]
+    B --> C{Campaign still active?}
+    C -->|No| D[Skip]
+    C -->|Yes| E[Create IgOutboundDm]
+    E --> F{Drip type?}
+    F -->|Contact| G[processContactDrip]
+    F -->|Giveaway| H[handleGiveawayDm]
+    F -->|Other| I[formatIgMessage]
+    I --> J[sendIgMessage]
+    G --> K[Send contact form / opt-in]
+    H --> L[Pick winner & send result]
+</div>
+</section>
+
+<!-- ============ MESSAGE SENDING ============ -->
+<section id="message-sending">
+<h2>Message Formatting & Sending</h2>
+
+<details>
+<summary>formatIgMessage() <span class="line-ref">L1878–2002</span></summary>
+<div class="detail-content">
+<p>Converts a drip's DB representation into the Instagram Graph API message payload. Handles all drip types:</p>
+<table>
+  <tr><th>Type</th><th>IG API Format</th></tr>
+  <tr><td><code>TEXT</code> (IgTextDm)</td><td>Simple text message</td></tr>
+  <tr><td><code>MEDIA</code> (IgMediaDm)</td><td>Image/video attachment URL</td></tr>
+  <tr><td><code>POST</code> (IgPostDm)</td><td>Media share (Instagram post ID)</td></tr>
+  <tr><td><code>BUTTON</code> (IgButtonDm)</td><td>Generic template with buttons (postback payloads)</td></tr>
+  <tr><td><code>COMBO</code> (IgComboDm)</td><td>Generic template with image + text + buttons</td></tr>
+  <tr><td><code>CAROUSEL</code> (IgCarouselDm)</td><td>Horizontal scrolling cards, each with image + title + buttons</td></tr>
+  <tr><td><code>CONTACT</code> (IgContactDm)</td><td>Routed to separate flow — not formatted here</td></tr>
+  <tr><td><code>GIVEAWAY</code> (IgGiveawayDm)</td><td>Routed to separate flow — not formatted here</td></tr>
+</table>
+<p>For all templates with buttons, each <code>IgButton</code> is serialized as a postback with payload <code>{"type":"BUTTON","buttonId":"..."}</code>.</p>
+</div>
+</details>
+
+<details>
+<summary>sendIgMessage() <span class="line-ref">L2436–2531</span></summary>
+<div class="detail-content">
+<p>Makes the actual <code>POST</code> to <code>https://graph.instagram.com/v24.0/{igId}/messages</code> with the formatted payload.
+On success, updates the <code>IgOutboundDm</code> status to <code>SENT</code>. On failure, marks as <code>FAILED</code> with the error message.
+Retrieves the access token from AWS Secrets Manager for each send.</p>
+</div>
+</details>
+
+<details>
+<summary>sendIgCommentReply() <span class="line-ref">L2532–2596</span></summary>
+<div class="detail-content">
+<p>Replies to an Instagram comment via <code>POST https://graph.instagram.com/v24.0/{commentId}/replies</code>.
+Creates an <code>IgOutboundComment</code> record and updates its status on success/failure.</p>
+</div>
+</details>
+
+<details>
+<summary>hideIgComment() <span class="line-ref">L2597–2639</span></summary>
+<div class="detail-content">
+<p>Hides a comment by setting <code>hide=true</code> via the Graph API. Used by the moderation system to auto-hide flagged comments.</p>
+</div>
+</details>
+</section>
+
+<!-- ============ CONTACT COLLECTION ============ -->
+<section id="contact-collection">
+<h2>Contact Info Collection</h2>
+<p>
+  A multi-step flow for collecting phone numbers and emails from fans via DMs.
+</p>
+
+<div class="mermaid">
+sequenceDiagram
+    participant Fan
+    participant SVC as InstagramHelperService
+    participant DB as Database
+
+    SVC->>Fan: Contact form DM (asks for phone/email)
+    Fan->>SVC: Replies with phone or email
+    SVC->>SVC: checkForContactInfo()
+    alt Valid phone/email
+        SVC->>DB: Store encrypted contact info on InstagramUser
+        SVC->>Fan: "Thanks! Got it." (or ask for remaining info)
+    else Invalid format
+        SVC->>Fan: sendPhoneErrorMessage() — "That doesn't look right"
+    end
+    Note over SVC: If both phone+email needed, loops until both collected
+    SVC->>SVC: processContactDrip() resumes campaign
+</div>
+
+<details>
+<summary>Key methods</summary>
+<div class="detail-content">
+<ul>
+  <li><code>checkForContactInfo()</code> <span class="line-ref">L1191–1297</span> — parses incoming DM text for phone numbers (via <code>libphonenumber-js</code>) and emails (via regex). Encrypts phone numbers before storage.</li>
+  <li><code>constructContactFormMessage()</code> <span class="line-ref">L2016–2075</span> — builds the text asking for phone/email/both based on what's still missing</li>
+  <li><code>sendContactInfoQuickReply()</code> <span class="line-ref">L1298–1340</span> — sends the contact request as an IG quick reply</li>
+  <li><code>processContactDrip()</code> <span class="line-ref">L2076–2140</span> — handles the contact collection drip step: sends form, schedules reminder</li>
+  <li><code>sendContactDripReminder()</code> <span class="line-ref">L2141–2192</span> — sends a follow-up reminder if the fan hasn't provided info</li>
+  <li><code>sendOptInMessage()</code> <span class="line-ref">L2248–2339</span> — sends opt-in consent message with YES/NO buttons before collecting data</li>
+</ul>
+</div>
+</details>
+</section>
+
+<!-- ============ GIVEAWAYS ============ -->
+<section id="giveaways">
+<h2>Giveaways</h2>
+
+<details>
+<summary>handleGiveawayDm() <span class="line-ref">L1802–1877</span></summary>
+<div class="detail-content">
+<p>Handles giveaway drips in campaigns. If the fan is the randomly selected winner, sends the win message; otherwise sends the lose message.
+The winner is selected by checking if one has already been picked for this drip — if not, the current fan becomes the winner.</p>
+</div>
+</details>
+
+<details>
+<summary>handleGiveawayBlast() <span class="line-ref">L1726–1801</span></summary>
+<div class="detail-content">
+<p>Similar logic but for blast-based giveaways. Selects a random winner from all blast recipients and sends win/lose messages accordingly.</p>
+</div>
+</details>
+</section>
+
+<!-- ============ SEGMENTATION ============ -->
+<section id="segmentation">
+<h2>Audience Segmentation</h2>
+<p>
+  Methods for building Prisma queries that filter fans based on saved audience segments.
+</p>
+
+<details>
+<summary>buildSegmentWhereConditions() <span class="line-ref">L124–270</span></summary>
+<div class="detail-content">
+<p>Converts an <code>IgUserSegment</code> (or snapshot) into Prisma <code>WHERE</code> conditions. Supports filtering by:</p>
+<ul>
+  <li><strong>Follower status</strong> — <code>isFollower</code></li>
+  <li><strong>Data collection mode</strong> — has phone, email, both, or neither</li>
+  <li><strong>Automations triggered</strong> — fan must have triggered specific campaigns (via trigger DMs or comments)</li>
+  <li><strong>Giveaways won</strong> — fan won specific giveaways (drip or blast)</li>
+</ul>
+<p>Respects the segment's <code>filterLogicalOperator</code> (AND vs OR) for combining conditions.</p>
+</div>
+</details>
+
+<details>
+<summary>getFanIdsPlain() / getFanIdsAmount() / getFanIdsAmountCombo() <span class="line-ref">L272–692</span></summary>
+<div class="detail-content">
+<p>Query methods for retrieving fan IDs matching segment filters. Support cursor-based pagination and chunked processing (5,000 per chunk) for large audiences.
+<code>getFanIdsAmountCombo</code> unions fans across multiple segments with deduplication.</p>
+</div>
+</details>
+</section>
+
+<!-- ============ CREDITS ============ -->
+<section id="credits">
+<h2>Credits System</h2>
+
+<details>
+<summary>Credit flow</summary>
+<div class="detail-content">
+<p>Teams on <strong>BASE</strong> or <strong>GROWTH</strong> plans have a finite credit balance (<code>InstagramFreeCredit</code>).
+Each active drip step in a campaign costs 1 credit.</p>
+<ul>
+  <li><code>igOnCredits()</code> <span class="line-ref">L712–722</span> — checks if a team is on a credit-based plan</li>
+  <li><code>checkAndDeductCredits()</code> <span class="line-ref">L863–897</span> — counts active drips in a campaign, verifies sufficient credits, deducts them. Returns <code>false</code> if insufficient.</li>
+  <li><code>deductCredits()</code> <span class="line-ref">L821–861</span> — performs the actual deduction and sends notifications:
+    <ul>
+      <li>At 20 credits remaining: sends a warning email</li>
+      <li>At 0 credits: sends depletion email + Slack notification</li>
+    </ul>
+  </li>
+</ul>
+</div>
+</details>
+</section>
+
+<!-- ============ FAN MANAGEMENT ============ -->
+<section id="fan-management">
+<h2>Fan Management</h2>
+
+<details>
+<summary>updateInstagramUserInfo() <span class="line-ref">L1077–1158</span></summary>
+<div class="detail-content">
+<p>The central fan upsert method — called on every webhook event. Creates or updates the <code>InstagramUser</code> record:</p>
+<ol>
+  <li>Fetch fresh profile info from Instagram's Graph API via <code>requestFanInformation()</code></li>
+  <li>If the fan has a profile picture, download it and upload to S3 (with the IG account ID as the key prefix)</li>
+  <li>Upsert the <code>InstagramUser</code> record with the latest name, username, follower count, profile pic URL, follow status</li>
+</ol>
+
+<div class="callout callout-gotcha">
+  <div class="callout-title">Note: API errors are swallowed</div>
+  <p><code>requestFanInformation()</code> returns <code>null</code> on any API error rather than throwing. The upsert still proceeds but with stale/missing profile data.</p>
+</div>
+</div>
+</details>
+
+<details>
+<summary>isBrandNewFan() <span class="line-ref">L899–935</span></summary>
+<div class="detail-content">
+<p>Checks the Instagram Conversations API to determine if a fan has ever DM'd the business before. Used by the "only brand new fans" campaign filter.
+Only runs if <code>formLastSentAt</code> is null (fast path: if they've been sent a form, they're not brand new).</p>
+</div>
+</details>
+</section>
+
+<!-- ============ MODERATION ============ -->
+<section id="moderation">
+<h2>AI Moderation</h2>
+
+<details>
+<summary>handleCommentModeration() <span class="line-ref">L2758–3019</span></summary>
+<div class="detail-content">
+<p>AI-powered comment moderation for teams that have it enabled (<code>IgModeration</code>). The flow:</p>
+<ol>
+  <li>Check if the team has moderation configured and active</li>
+  <li>Call <code>aiService</code> to classify the comment (spam, offensive, etc.)</li>
+  <li>Based on moderation settings, may auto-hide the comment, auto-reply, or send creator notifications</li>
+  <li>Records the moderation decision in the database</li>
+</ol>
+<p>Supports configurable actions per classification: hide, reply, notify (email/SMS), or ignore.</p>
+</div>
+</details>
+
+<details>
+<summary>handleDmModeration() <span class="line-ref">L3200–3439</span></summary>
+<div class="detail-content">
+<p>Similar to comment moderation but for organic DMs (not triggered by campaigns). Can auto-reply to DMs based on AI classification.
+Includes a cooldown mechanism (<code>dmModerationCooldownEnds</code>) to avoid spamming fans with moderation responses.</p>
+</div>
+</details>
+</section>
+
+<!-- ============ STORY MENTIONS ============ -->
+<section id="story-mentions">
+<h2>Story Mentions</h2>
+
+<details>
+<summary>handleStoryMention() + respondToStoryMention() <span class="line-ref">L950–1076</span></summary>
+<div class="detail-content">
+<p>When a fan mentions the creator in their Instagram story:</p>
+<ol>
+  <li>Record the <code>InstagramStoryMention</code> in the database</li>
+  <li>Download the story image from IG and re-upload to S3 (IG story URLs expire)</li>
+  <li>Check if the creator has an active <code>InstagramMentionAutoResponse</code> configured</li>
+  <li>If so, validate the fan passes filters (min follower count, not excluded, hasn't been responded to before)</li>
+  <li>Send the auto-response DM</li>
+</ol>
+</div>
+</details>
+</section>
+
+<!-- ============ COMPLIANCE ============ -->
+<section id="compliance">
+<h2>Compliance Webhooks</h2>
+
+<details>
+<summary>handleDeauthorizeWebhook() / handleDeleteWebhook() <span class="line-ref">L3957–4070</span></summary>
+<div class="detail-content">
+<p>Handle Instagram data compliance callbacks:</p>
+<ul>
+  <li><strong>Deauthorize</strong> — when a user revokes the app's permissions. Decodes the signed request, deletes the access token from AWS Secrets Manager, and nulls out the secret key reference.</li>
+  <li><strong>Delete</strong> — when a user requests data deletion. Same cleanup flow.</li>
+</ul>
+<p>Both use <code>decodeSignedRequest()</code> <span class="line-ref">L3957–3992</span> to base64-decode the Meta signed request payload.</p>
+
+<div class="callout callout-gotcha">
+  <div class="callout-title">Note: Signature verification is commented out</div>
+  <p>The HMAC signature verification in <code>decodeSignedRequest()</code> is currently commented out <span class="line-ref">L3984–3989</span>.
+  The payload is decoded but not cryptographically verified against the app secret.</p>
+</div>
+</div>
+</details>
+</section>
+
+<!-- ============ GOTCHAS ============ -->
+<section id="gotchas">
+<h2>Gotchas & Notes</h2>
+
+<div class="callout callout-gotcha">
+  <div class="callout-title">File size</div>
+  <p>At ~4,070 lines, this is the largest service in the monorepo. It handles a wide surface area — webhook processing, campaign logic, message formatting, API calls, moderation, compliance — all in one file. A future refactor could split it into focused sub-services (e.g., campaign, moderation, messaging, compliance).</p>
+</div>
+
+<div class="callout callout-gotcha">
+  <div class="callout-title">Hardcoded passthrough IDs</div>
+  <p>The <code>PASSTHROUGH_IDS</code> array <span class="line-ref">L113–119</span> contains hardcoded Instagram account IDs for webhook forwarding. Adding/removing test accounts requires a code change.</p>
+</div>
+
+<div class="callout callout-gotcha">
+  <div class="callout-title">Commented-out sheet-based segmentation</div>
+  <p>The <code>getFanIdsPlain()</code> and <code>getFanIdsAmount()</code> methods contain commented-out code for loading fan IDs from uploaded spreadsheets in S3 <span class="line-ref">L333–352</span>. The <code>idsFromSheet</code> array is always empty, but all the chunking/pagination logic to handle it is still active.</p>
+</div>
+
+<div class="callout callout-gotcha">
+  <div class="callout-title">Instagram API version</div>
+  <p>All Graph API calls use <code>v24.0</code>. This version is hardcoded in URL strings throughout the service rather than being configurable.</p>
+</div>
+
+<div class="callout callout-gotcha">
+  <div class="callout-title">Credit deduction is non-atomic</div>
+  <p><code>checkAndDeductCredits()</code> reads the credit balance, counts required drips, then updates — but this isn't wrapped in a transaction. Under high concurrency, two campaigns could both pass the credit check and over-deduct.</p>
+</div>
+</section>
+
+<!-- ============ DB MODELS ============ -->
+<section id="db-models">
+<h2>Related DB Models</h2>
+<p>Key Prisma models that this service reads from and writes to:</p>
+
+<div class="mermaid">
+erDiagram
+    TeamInstagramAccount ||--o{ InstagramUser : "has fans"
+    TeamInstagramAccount ||--o{ IgDripCampaign : "has campaigns"
+    TeamInstagramAccount ||--o{ InstagramBlast : "has blasts"
+    TeamInstagramAccount ||--o{ InstagramStoryMention : "receives mentions"
+    TeamInstagramAccount ||--|| InstagramMentionAutoResponse : "auto-response config"
+
+    IgDripCampaign ||--o{ IgDrip : "contains drips"
+    IgDripCampaign ||--o{ IgTriggerDm : "triggered by DMs"
+    IgDripCampaign ||--o{ IgTriggerComment : "triggered by comments"
+
+    IgDrip ||--o| IgTextDm : "text content"
+    IgDrip ||--o| IgMediaDm : "media content"
+    IgDrip ||--o| IgButtonDm : "button content"
+    IgDrip ||--o| IgComboDm : "combo content"
+    IgDrip ||--o| IgCarouselDm : "carousel content"
+    IgDrip ||--o| IgContactDm : "contact form"
+    IgDrip ||--o| IgGiveawayDm : "giveaway"
+    IgDrip ||--o{ IgOutboundDm : "sent messages"
+
+    InstagramUser ||--o{ IgOutboundDm : "receives DMs"
+    InstagramUser ||--o{ IgTriggerDm : "triggers campaigns"
+    InstagramUser ||--o{ InstagramBlastRecipient : "blast recipients"
+    InstagramUser ||--o{ InstagramStoryMention : "mentions"
+
+    InstagramBlast ||--o{ InstagramBlastBatch : "sent in batches"
+    InstagramBlast ||--o{ InstagramBlastRecipient : "recipients"
+
+    IgUserSegment ||--o{ IgDripCampaign : "filters by"
+</div>
+
+<details>
+<summary>InstagramUser fields</summary>
+<div class="detail-content">
+<table>
+  <tr><th>Field</th><th>Purpose</th></tr>
+  <tr><td><code>instagramId</code></td><td>Instagram's unique ID for this user (unique key)</td></tr>
+  <tr><td><code>name, username, followerCount, profilePictureUrl, isVerified</code></td><td>Profile info refreshed from IG API on each interaction</td></tr>
+  <tr><td><code>followsBusiness</code></td><td>Whether this fan follows the creator — used for follower-only campaign filters</td></tr>
+  <tr><td><code>phoneNumber, email</code></td><td>Collected contact info (phone is encrypted)</td></tr>
+  <tr><td><code>blastWindowEnds</code></td><td>When the 24h messaging window expires — key for blast eligibility</td></tr>
+  <tr><td><code>formLastSentAt</code></td><td>When a contact form was last sent — prevents re-sending</td></tr>
+  <tr><td><code>pendingContactCampaignId</code></td><td>Which campaign is waiting for this fan's contact info</td></tr>
+  <tr><td><code>isOrganicConvo, hasConversation, mostRecentDm, triageStatus</code></td><td>Inbox/triage state for the creator's DM management UI</td></tr>
+  <tr><td><code>dmModerationCooldownEnds</code></td><td>Prevents spamming moderation responses to the same fan</td></tr>
+</table>
+</div>
+</details>
+</section>
+
+</main>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default',
+    securityLevel: 'loose',
+    flowchart: { curve: 'basis' },
+    sequence: { actorMargin: 50 }
+  });
+</script>
+</body>
+</html>
